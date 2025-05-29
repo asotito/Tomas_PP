@@ -1,8 +1,9 @@
 import { Start } from './scenes/Start.js';
+import { Level1 } from './scenes/Level1.js';
 
 const config = {
     type: Phaser.AUTO,
-    title: 'Overlord Rising',
+    title: 'Napoleon Guessing Game',
     description: '',
     parent: 'game-container',
     width: 1280,
@@ -10,7 +11,8 @@ const config = {
     backgroundColor: '#000000',
     pixelArt: false,
     scene: [
-        Start
+        Start,
+        Level1
     ],
     scale: {
         mode: Phaser.Scale.FIT,

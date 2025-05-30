@@ -1,5 +1,6 @@
 import { Start } from './scenes/Start.js';
 import { Level1 } from './scenes/Level1.js';
+import { Classes } from './shared/Classes.js';
 
 const config = {
     type: Phaser.AUTO,
@@ -12,7 +13,8 @@ const config = {
     pixelArt: false,
     scene: [
         Start,
-        Level1
+        Level1,
+        Classes
     ],
     scale: {
         mode: Phaser.Scale.FIT,

@@ -1,3 +1,5 @@
+import { Classes } from '../shared/Classes.js'
+
 export class Start extends Phaser.Scene {
 
     constructor() {
@@ -13,75 +15,57 @@ export class Start extends Phaser.Scene {
     }
 
     create() {
-        //Blur background section
-        const blurBackground = this.add.image(0, 0, 'blurBackground').setOrigin(0);
+        this.classScale = new Classes(this);
+        
+        const blurBackground = this.classScale.scaleImage(this.add.image(0, 0, 'blurBackground'), 1, 1, true, false, 0, 0);
 
-            // Scale it to fill the game canvas
-        const scaleBlurBackgroundX2 = this.cameras.main.width / blurBackground.width;
-        const scaleBlurBackgroundY2 = this.cameras.main.height / blurBackground.height;
+        const title = this.classScale.scaleImage(this.add.image(160, -250, 'title'), 1, 1, false, false, 0, 0);
 
-            // Use the smaller scale to maintain aspect ratio (fit inside)
-        const blurBackgroundScale = Math.min(scaleBlurBackgroundX2, scaleBlurBackgroundY2);
+        const start = this.classScale.scaleImage(this.add.image(640, 380, 'start'), 3, 3, false, true, 0.5, 0.5);
 
-        blurBackground.setScale(blurBackgroundScale);
+        const description = this.classScale.scaleImage(this.add.image(640, 540, 'description'), 3, 3, false, true, 0.5, 0.5);
 
-        // Optionally center it if you want it centered
-        blurBackground.x = (this.cameras.main.width - blurBackground.displayWidth) / 2;
-        blurBackground.y = (this.cameras.main.height - blurBackground.displayHeight) / 2;
+        const startScaleX = start.scaleX;
+        const startScaleY = start.scaleY;
 
-        //Title text section
-        const title = this.add.image(640, 100, 'title');
-
-        title.setScale(0.8);
-
-        //Buttons section
-            //Start button
-        const start = this.add.image(630, 330, 'start').setInteractive();
-
-        start.setScale(0.8);
+        const descriptionScaleX = description.scaleX;
+        const descriptionScaleY = description.scaleY;
 
         start.on('pointerdown', () => {
             this.tweens.add({
             targets: start,
-            scale: 0.6,
+            scaleX: startScaleX / 2,
+            scaleY: startScaleY / 2,
             duration: 100,
             yoyo: true,
             ease: 'Power1'
-            }),
-            this.scene.start('Level1');
+            })
+            this.time.delayedCall(
+                1000,
+                () => {
+                    this.scene.start('Level1');
+                }
+            )
         });
 
-        start.on('pointerup', () => {
+        description.on('pointerdown', () => {
             this.tweens.add({
-                targets: start,
-                scale: 0.8,
-                duration: 100,
-                ease: 'Power1'
-            });    
+            targets: description,
+            scaleX: descriptionScaleX / 2,
+            scaleY: descriptionScaleY / 2,
+            duration: 100,
+            yoyo: true,
+            ease: 'Power1'
+            })
+            this.time.delayedCall(
+                1000,
+                () => {
+                    this.scene.start('Level1');
+                }
+            )
         });
 
-            //Description button
-        const description = this.add.image(588, 410, 'description');
-
-        description.setScale(0.8);
-
-
-        //Background section
-        const background = this.add.image(0, 0, 'background').setOrigin(0);
-
-            // Scale it to fill the game canvas
-        const scaleBackgroundX = this.cameras.main.width / background.width;
-        const scaleBackgroundY = this.cameras.main.height / background.height;
-
-            // Use the smaller scale to maintain aspect ratio (fit inside)
-        const backgroundScale = Math.min(scaleBackgroundX, scaleBackgroundY);
-
-        background.setScale(backgroundScale);
-
-        background.x = (this.cameras.main.width - background.displayWidth) / 2;
-        background.y = (this.cameras.main.height - background.displayHeight) / 2;
-
-        background.alpha = 1;
+        const background = this.classScale.scaleImage(this.add.image(0, 0, 'background'), 1, 1, true, false, 0, 0);
         
         this.tweens.add({
             targets: background,

@@ -68,7 +68,7 @@ export class Start extends Phaser.Scene {
             this.time.delayedCall(
                 1000,
                 () => {
-                    this.scene.start('Level1');
+                    this.scene.start('Level3');
                 }
             )
         })

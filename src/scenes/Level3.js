@@ -27,8 +27,8 @@ export class Level3 extends Phaser.Scene{
         this.classScale = new Classes(this);
 
         const background = this.classScale.scaleImage(this.add.image(0, 0, 'backgroundGame'), 1, 1, true, false, 0, 0);
-        this.finishLine = this.classScale.scaleImage(this.add.image(950, 260, 'finishLine'), 12, 1, false, false, 0, 0);
-        this.player = this.classScale.scaleImage(this.add.image(200, 360, 'nBoat'), 12, 12, false, false, 0, 0);
+        this.finishLine = this.classScale.scaleImage(this.add.image(980, 100, 'finishLine'), 12, 1, false, false, 0, 0);
+        this.player = this.classScale.scaleImage(this.add.image(200, 720, 'nBoat'), 12, 12, false, false, 0, 0);
 
         this.gameContainer = this.add.container(0, 0, [background, this.finishLine, this.player]);        
 
@@ -102,7 +102,7 @@ export class Level3 extends Phaser.Scene{
     }
 
     handleCollisionLine(gameContainer) {
-        gameContainer.setVisible(false);
+        gameContainer.destroy();
         this.cutScene.lastScene();
     }
 }

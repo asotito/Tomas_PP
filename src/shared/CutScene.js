@@ -185,36 +185,33 @@ export class CutScene{
     }
 
     lastScene(){
-        const death = this.classScale.scaleImage(this.scene.add.image(0, 0, 'death'), 1, 1, true, false, 0, 0);
-        const credits = this.classScale.scaleImage(this.scene.add.image(0, 0, 'credits'), 1, 1, true, false, 0, 0);
-        const nextButtonImage = this.classScale.scaleImage(this.scene.add.image(1070, 650, 'nextButton'), 7, 7, false, true, 0.5, 0.5);
+        let step = 0;
 
-        credits.alpha = 0;
-        this.sceneStep = 0;
-
-        this.classScale.buttonClass(nextButtonImage, () => {
-                if (this.sceneStep === 0) {
-                    this.scene.tweens.add({
-                        targets: death,
-                        alpha: 0,
-                        duration: 0,
-                        });
-                        this.scene.tweens.add({
-                        targets: credits,
-                        alpha: 1,
-                        duration: 0,
-                        onComplete: () => {
-                            death.destroy();
-                            this.sceneStep = 1;
-                        }
-                    });
-                }
-                else if (this.sceneStep === 1) {
-                    this.scene.scene.start('Start');
-                    credits.destroy();
-                    nextButtonImage.destroy();
-                }
-            }
+        const death   = this.classScale.scaleImage(
+            this.scene.add.image(0,0,'death'),
+            1,1,true,false,0,0
         );
+        const credits = this.classScale.scaleImage(
+            this.scene.add.image(0,0,'credits'),
+            1,1,true,false,0,0
+        );
+        credits.alpha = 0;
+
+        const nextBtn = this.classScale.scaleImage(
+            this.scene.add.image(1070,650,'nextButton'),
+            7,7,false,true,0.5,0.5
+        );
+
+        nextBtn.setInteractive({ useHandCursor: true })
+                .on('pointerdown', () => {
+            if (step === 0) {
+            death.destroy();
+            credits.setAlpha(1);
+            step = 1;
+            }
+            else {
+            this.scene.scene.start('Start');
+            }
+        });
     }
 }

@@ -25,7 +25,7 @@ export class Start extends Phaser.Scene {
     
     buildUI(){
         this.classScale = new Classes(this);
-        
+
         const blurBackground = this.classScale.scaleImage(this.add.image(0, 0, 'blurBackground'), 1, 1, true, false, 0, 0);
         const title = this.classScale.scaleImage(this.add.image(160, -250, 'title'), 1, 1, false, false, 0, 0);
         const start = this.classScale.scaleImage(this.add.image(640, 380, 'start'), 3, 3, false, true, 0.5, 0.5);
@@ -39,7 +39,7 @@ export class Start extends Phaser.Scene {
 
         this.uiContainer = this.add.container(0, 0, [blurBackground, start, description, title]);
 
-        start.on('pointerdown', () => {
+        this.classScale.buttonClass(start, () => {
             this.tweens.add({
                 targets: start,
                 scaleX: startScaleX / 2,
@@ -54,9 +54,9 @@ export class Start extends Phaser.Scene {
                     this.scene.start('Level1');
                 }
             )
-        });
+        })
 
-        description.on('pointerdown', () => {
+        this.classScale.buttonClass(description, () => {
             this.tweens.add({
                 targets: description,
                 scaleX: descriptionScaleX / 2,
@@ -71,7 +71,7 @@ export class Start extends Phaser.Scene {
                     this.scene.start('Level1');
                 }
             )
-        });
+        })
 
         this.uiContainer.setAlpha(0);
 

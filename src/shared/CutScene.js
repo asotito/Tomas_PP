@@ -8,6 +8,7 @@ export class CutScene{
     }
 
     preload(scene) {
+        this.scene.load.image('nextButton', 'assets/nextScreen.png');
         switch (scene){
             case 1:
                 this.scene.load.image('background', 'assets/background.png');
@@ -18,7 +19,13 @@ export class CutScene{
             case 3:
                 this.scene.load.image('kidNapoleon', 'assets/kidNapoleon.png');
                 this.scene.load.image('lieutenantNapoleon', 'assets/lieutenantNapoleon.png');
+                break;
+            case 4:
                 this.scene.load.image('commanderNapoleon', 'assets/commanderNapoleon.png');
+                this.scene.load.image('horse', 'assets/horse.png');
+                this.scene.load.image('flags', 'assets/flags.png');
+                this.scene.load.image('death', 'assets/death.png');
+                this.scene.load.image('credits', 'assets/credits.png');
                 break;
         }  
     }
@@ -34,7 +41,7 @@ export class CutScene{
         this.scene.tweens.add({
             targets: uiContainer,
             alpha: 1,
-            duration: 3000,
+            duration: 0,
             ease: 'Linear',
             onComplete: () => {
                 background.destroy();
@@ -44,84 +51,170 @@ export class CutScene{
     }
 
     secondScene(gameContainer){
-        const napoleonBaby = this.classScale.scaleImage(this.scene.add.image(0, 0, 'napoleonBaby'), 1, 1, true, true, 0, 0);
-        napoleonBaby.on('pointerdown', () => {
-            this.scene.tweens.add({
-                targets: napoleonBaby,
-                alpha: 0,
-                ease: 'Linear',
-                duration: 500,
-            });
-            this.scene.tweens.add({
-                targets: gameContainer,
-                alpha: 1,
-                duration: 500,
-                ease: 'Linear',
-                onComplete: () => {
-                    napoleonBaby.destroy();
-                }
-            });
-        });
+        const napoleonBaby = this.classScale.scaleImage(this.scene.add.image(0, 0, 'napoleonBaby'), 1, 1, true, false, 0, 0);
+        const nextButtonImage = this.classScale.scaleImage(this.scene.add.image(1070, 650, 'nextButton'), 7, 7, false, true, 0.5, 0.5);
+        const nextButton = this.classScale.buttonClass(nextButtonImage,
+            () => {
+                this.scene.tweens.add({
+                    targets: napoleonBaby,
+                    alpha: 0,
+                    ease: 'Linear',
+                    duration: 500,
+                });
+                this.scene.tweens.add({
+                    targets: gameContainer,
+                    alpha: 1,
+                    duration: 0,
+                    ease: 'Linear',
+                    onComplete: () => {
+                        napoleonBaby.destroy();
+                        nextButton.destroy();
+                    }
+                });
+            }
+        );
     }
 
     thirdScene(gameContainer){
-        const kidNapoleon = this.classScale.scaleImage(this.scene.add.image(0, 0, 'kidNapoleon'), 1, 1, true, true, 0, 0);
-        const lieutenantNapoleon = this.classScale.scaleImage(this.scene.add.image(0, 0, 'lieutenantNapoleon'), 1, 1, true, true, 0, 0);
-        const commanderNapoleon = this.classScale.scaleImage(this.scene.add.image(0, 0, 'commanderNapoleon'), 1, 1, true, true, 0, 0);
+        const kidNapoleon = this.classScale.scaleImage(this.scene.add.image(0, 0, 'kidNapoleon'), 1, 1, true, false, 0, 0);
+        const lieutenantNapoleon = this.classScale.scaleImage(this.scene.add.image(0, 0, 'lieutenantNapoleon'), 1, 1, true, false, 0, 0);
+        const nextButtonImage = this.classScale.scaleImage(this.scene.add.image(1070, 650, 'nextButton'), 7, 7, false, true, 0.5, 0.5);
 
         lieutenantNapoleon.alpha = 0;
-        commanderNapoleon.alpha = 0;
+        this.sceneStep = 0;
 
-        kidNapoleon.on('pointerdown', () => {
-            this.scene.tweens.add({
-                targets: kidNapoleon,
-                alpha: 0,
-                ease: 'Linear',
-                duration: 500,
-            });
-            this.scene.tweens.add({
-                targets: lieutenantNapoleon,
-                alpha: 1,
-                duration: 500,
-                ease: 'Linear',
-                onComplete: () => {
-                    kidNapoleon.destroy();
+        this.classScale.buttonClass(nextButtonImage, () => {
+                if (this.sceneStep === 0) {
+                    this.scene.tweens.add({
+                        targets: kidNapoleon,
+                        alpha: 0,
+                        duration: 0,
+                        });
+                        this.scene.tweens.add({
+                        targets: lieutenantNapoleon,
+                        alpha: 1,
+                        duration: 0,
+                        onComplete: () => {
+                            kidNapoleon.destroy();
+                            this.sceneStep = 1;
+                        }
+                    });
                 }
-            });
-        });
-        lieutenantNapoleon.on('pointerdown', () => {
-            this.scene.tweens.add({
-                targets: lieutenantNapoleon,
-                alpha: 0,
-                ease: 'Linear',
-                duration: 500,
-            });
-            this.scene.tweens.add({
-                targets: commanderNapoleon,
-                alpha: 1,
-                duration: 500,
-                ease: 'Linear',
-                onComplete: () => {
-                    lieutenantNapoleon.destroy();
+                else if (this.sceneStep === 1) {
+                    this.scene.tweens.add({
+                        targets: lieutenantNapoleon,
+                        alpha: 0,
+                        duration: 0,
+                        });
+                    this.scene.tweens.add({
+                        targets: gameContainer,
+                        alpha: 1,
+                        duration: 0,
+                        onComplete: () => {
+                            lieutenantNapoleon.destroy();
+                            nextButtonImage.destroy();
+
+                        }
+                    });
                 }
-            });
-        });
-        commanderNapoleon.on('pointerdown', () => {
-            this.scene.tweens.add({
-                targets: commanderNapoleon,
-                alpha: 0,
-                ease: 'Linear',
-                duration: 500,
-            });
-            this.scene.tweens.add({
-                targets: gameContainer,
-                alpha: 1,
-                duration: 500,
-                ease: 'Linear',
-                onComplete: () => {
-                    commanderNapoleon.destroy();
+            }
+        );
+    }
+
+    fourthScene(gameContainer){
+        const commanderNapoleon = this.classScale.scaleImage(this.scene.add.image(0, 0, 'commanderNapoleon'), 1, 1, true, false, 0, 0);
+        const horse = this.classScale.scaleImage(this.scene.add.image(0, 0, 'horse'), 1, 1, true, false, 0, 0);
+        const flags = this.classScale.scaleImage(this.scene.add.image(0, 0, 'flags'), 1, 1, true, false, 0, 0);
+        const nextButtonImage = this.classScale.scaleImage(this.scene.add.image(1070, 650, 'nextButton'), 7, 7, false, true, 0.5, 0.5);
+
+        horse.alpha = 0;
+        flags.alpha = 0;
+        this.sceneStep = 0;
+
+        this.classScale.buttonClass(nextButtonImage, () => {
+                if (this.sceneStep === 0) {
+                    this.scene.tweens.add({
+                        targets: commanderNapoleon,
+                        alpha: 0,
+                        duration: 0,
+                        });
+                        this.scene.tweens.add({
+                        targets: horse,
+                        alpha: 1,
+                        duration: 0,
+                        onComplete: () => {
+                            commanderNapoleon.destroy();
+                            this.sceneStep = 1;
+                        }
+                    });
                 }
-            });
-        });
+                else if (this.sceneStep === 1) {
+                    this.scene.tweens.add({
+                        targets: horse,
+                        alpha: 0,
+                        duration: 0,
+                        });
+                    this.scene.tweens.add({
+                        targets: flags,
+                        alpha: 1,
+                        duration: 0,
+                        onComplete: () => {
+                            horse.destroy();
+                            this.sceneStep = 2;
+                        }
+                    });
+                }
+                else if (this.sceneStep === 2) {
+                    this.scene.tweens.add({
+                        targets: flags,
+                        alpha: 0,
+                        duration: 0,
+                        });
+                    this.scene.tweens.add({
+                        targets: gameContainer,
+                        alpha: 1,
+                        duration: 0,
+                        onComplete: () => {
+                            flags.destroy();
+                            nextButtonImage.destroy();
+                        }
+                    });
+                }
+            }
+        );
+    }
+
+    lastScene(){
+        const death = this.classScale.scaleImage(this.scene.add.image(0, 0, 'death'), 1, 1, true, false, 0, 0);
+        const credits = this.classScale.scaleImage(this.scene.add.image(0, 0, 'credits'), 1, 1, true, false, 0, 0);
+        const nextButtonImage = this.classScale.scaleImage(this.scene.add.image(1070, 650, 'nextButton'), 7, 7, false, true, 0.5, 0.5);
+
+        credits.alpha = 0;
+        this.sceneStep = 0;
+
+        this.classScale.buttonClass(nextButtonImage, () => {
+                if (this.sceneStep === 0) {
+                    this.scene.tweens.add({
+                        targets: death,
+                        alpha: 0,
+                        duration: 0,
+                        });
+                        this.scene.tweens.add({
+                        targets: credits,
+                        alpha: 1,
+                        duration: 0,
+                        onComplete: () => {
+                            death.destroy();
+                            this.sceneStep = 1;
+                        }
+                    });
+                }
+                else if (this.sceneStep === 1) {
+                    this.scene.scene.start('Start');
+                    credits.destroy();
+                    nextButtonImage.destroy();
+                }
+            }
+        );
     }
 }

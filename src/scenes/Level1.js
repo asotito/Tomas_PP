@@ -12,6 +12,7 @@ export class Level1 extends Phaser.Scene {
         this.load.image('secondError', 'assets/level1SecondError.png');
         this.load.image('thirdError', 'assets/level1ThirdError.png');
         this.load.image('correctOption', 'assets/level1CorrectOption.png');
+        this.load.image('nextButton', 'assets/nextScreen.png');
 
         this.cutScene = new CutScene(this);
         this.cutScene.preload(2);
@@ -26,19 +27,21 @@ export class Level1 extends Phaser.Scene {
     buildGame(){
         this.classScale = new Classes(this);
 
-        const firstOpp = this.classScale.scaleImage(this.add.image(0, 0, 'firstOpp'), 1, 1, true, true, 0, 0);
-        const firstError = this.classScale.scaleImage(this.add.image(0, 0, 'firstError'), 1, 1, true, true, 0, 0);
-        const secondError = this.classScale.scaleImage(this.add.image(0, 0, 'secondError'), 1, 1, true, true, 0, 0);
-        const thirdError = this.classScale.scaleImage(this.add.image(0, 0, 'thirdError'), 1, 1, true, true, 0, 0);
-        const correctOption = this.classScale.scaleImage(this.add.image(0, 0, 'correctOption'), 1, 1, true, true, 0, 0);
+        const firstOpp = this.classScale.scaleImage(this.add.image(0, 0, 'firstOpp'), 1, 1, true, false, 0, 0);
+        const firstError = this.classScale.scaleImage(this.add.image(0, 0, 'firstError'), 1, 1, true, false, 0, 0);
+        const secondError = this.classScale.scaleImage(this.add.image(0, 0, 'secondError'), 1, 1, true, false, 0, 0);
+        const thirdError = this.classScale.scaleImage(this.add.image(0, 0, 'thirdError'), 1, 1, true, false, 0, 0);
+        const correctOption = this.classScale.scaleImage(this.add.image(0, 0, 'correctOption'), 1, 1, true, false, 0, 0);
+        const nextButtonImage = this.classScale.scaleImage(this.add.image(1070, 650, 'nextButton'), 7, 7, false, true, 0.5, 0.5);
 
         firstOpp.alpha = 1;
         firstError.alpha = 0;
         secondError.alpha = 0;
         thirdError.alpha = 0;
         correctOption.alpha = 0;
+        nextButtonImage.alpha = 0;
 
-        this.gameContainer = this.add.container(0, 0, [firstOpp, firstError, secondError, thirdError, correctOption]);        
+        this.gameContainer = this.add.container(0, 0, [firstOpp, firstError, secondError, thirdError, correctOption, nextButtonImage]);        
 
         this.contador = 0;
         this.showedImage = firstOpp;
@@ -51,18 +54,13 @@ export class Level1 extends Phaser.Scene {
                     duration: 0,
                     onComplete: () => {
                         this.showedImage.destroy();
+                        nextButtonImage.alpha = 1;
                     }
                 });
-                this.time.delayedCall(
-                    1000,
-                    () => {
-                        this.scene.start('Level2');
-                    }
-                );
+                this.classScale.buttonClass(nextButtonImage, () => {this.scene.start('Level2');});
             } else {
                 if(!isNaN(event.key) && event.key.trim() !== ''){
                     this.contador++;
-                    console.log(this.contador);
                     switch (this.contador) {
                         case 1:
                             this.showedImage = firstError;
@@ -94,6 +92,7 @@ export class Level1 extends Phaser.Scene {
                                 duration: 0,
                                 onComplete: () => {
                                     secondError.destroy();
+                                    nextButtonImage.alpha = 1;
                                 }
                             });
                             break;
@@ -106,12 +105,7 @@ export class Level1 extends Phaser.Scene {
                                     thirdError.destroy();
                                 }
                             });
-                            this.time.delayedCall(
-                                1000,
-                                () => {
-                                    this.scene.start('Level2');
-                                }
-                            )
+                            this.classScale.buttonClass(nextButtonImage, () => {this.scene.start('Level2');});
                             break;
                     }
                 }

@@ -10,7 +10,7 @@ export class Classes{
         image.setOrigin(originX, originY);
 
         if(interactive){
-            image.setInteractive();
+            image.setInteractive({ useHandCursor: true });
         }
         
         const imageX = cam.width / image.width;
@@ -28,5 +28,10 @@ export class Classes{
         }
 
         return image;
+    }
+
+    buttonClass(button, onClickCallBack){
+        button.on('pointerdown', onClickCallBack, this.scene);
+        return button;
     }
 }

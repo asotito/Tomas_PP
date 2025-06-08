@@ -19,12 +19,7 @@ export class Start extends Phaser.Scene {
 
     create() {
         this.uiContainer = this.buildUI();
-        const inp = document.getElementById('always-open-input');
 
-        // 1) Tras el primer toque, haces focus:
-        this.input.once('pointerdown', () => {
-            inp.focus();
-        });
         this.cutScene.firstScene(this.uiContainer);        
     }
     
@@ -73,7 +68,7 @@ export class Start extends Phaser.Scene {
             this.time.delayedCall(
                 1000,
                 () => {
-                    this.scene.start('Level3');
+                    this.scene.start('Level1');
                 }
             )
         })
